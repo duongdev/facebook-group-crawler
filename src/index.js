@@ -3,6 +3,7 @@ import fs from 'fs';
 import moment from 'moment';
 import puppeteer from 'puppeteer';
 import * as Group from 'group';
+import auth from 'auth';
 
 /* Init debug instance */
 const _d = new Debug('app:crawler');
@@ -31,17 +32,19 @@ const app = (async () => {
 
   _d('Loading cookies...');
   try {
-    const cookies = JSON.parse(fs.readFileSync('cookies.json2'));
+    const cookies = JSON.parse(fs.readFileSync('cookies.json'));
     await cookies.forEach(async cookie => await page.setCookie(cookie));
     await page.waitFor(2000);
   } catch (e) {
     _d('Load cookies fail. Please login...');
     await page.goto('https://www.facebook.com', { waitUntil: 'networkidle' });
-    await page.type('#email', process.env.EMAIL);
-    await page.type('#pass', process.env.PASS);
+    await page.type('#email', auth.email);
+    await page.type('#pass', auth.pass);
     await page.click('#loginbutton');
+    await page.waitFor('#userNav', { timeout: 60e3 });
+    fs.writeFileSync('cookies.json', JSON.stringify(await page.cookies()));
+    _d('Login successfully. Cookie saved to cookies.json');
   }
-  return;
 
   _d('Navigate to VNsbGroup');
   await page.goto('https://www.facebook.com/groups/VNsbGroup', { waitUntil: 'networkidle' });
