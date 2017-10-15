@@ -1,0 +1,26 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "semi": 1,
+    "no-console": 0
+  },
+
+  "globals": {
+    "document": 0,
+    "Set": 0,
+    "URL": 0
+  }
+}

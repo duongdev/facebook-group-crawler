@@ -1,0 +1,29 @@
+{
+  "name": "vnsbgroup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_PATH=./src babel-node ./src/index.js",
+    "lint": "eslint_d .",
+    "lint:fix": "eslint_d . --fix"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "debug": "^3.1.0",
+    "eslint": "^4.9.0",
+    "eslint_d": "^5.1.0",
+    "moment": "^2.19.1",
+    "puppeteer": "^0.12.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint-plugin-import": "^2.7.0"
+  }
+}
