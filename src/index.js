@@ -159,7 +159,7 @@ const app = (async (appName, groupURL) => {
         fs.writeFileSync(`${datasetDir(appName)}/total-comments.txt`, totalComments);
       } catch (err) {
         ignoredPosts.add(postId);
-        fs.writeFileSync(`${datasetDir(appName)}/ignored.txt`, JSON.stringify(ignoredPosts));
+        fs.writeFileSync(`${datasetDir(appName)}/ignored.txt`, Array.from(ignoredPosts).join(','));
         console.error(err.toString());
       }
       await postPage.close();
