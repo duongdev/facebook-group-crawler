@@ -2,6 +2,9 @@ import * as Firebase from 'firebase';
 import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
+import Debug from 'debug';
+
+const _d = new Debug('app:firebase');
 
 const  firebaseConfig = {
   apiKey: "AIzaSyCQp_PfjcZ5hHfGCD0uWeN7uamuzMnhWig",
@@ -34,8 +37,8 @@ export const app = async (appName) => {
 export const syncOne = async (appName, post) => {
   try {
     await database.ref(`${appName}/${post.id}`).set(post);
-    console.log(`Synced ${post.id}`);
+    _d(`Synced ${post.id} to Firebase`);
   } catch (error) {
-    console.error(error);
+    _d(error);
   }
 };

@@ -4,7 +4,7 @@ import path from 'path';
 import moment from 'moment';
 import puppeteer from 'puppeteer';
 import * as Group from 'group';
-import * as Firebase from 'firebase';
+import * as Firebase from './firebase';
 import auth from 'auth';
 
 /* Init debug instance */
