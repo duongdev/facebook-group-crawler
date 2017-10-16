@@ -4,6 +4,7 @@ import path from 'path';
 import moment from 'moment';
 import puppeteer from 'puppeteer';
 import * as Group from 'group';
+import * as Firebase from 'firebase';
 import auth from 'auth';
 
 /* Init debug instance */
@@ -133,11 +134,16 @@ const app = (async (appName, groupURL) => {
         const postId = Group.getPostIdFromURL(postURL);
         const meta = await Group.getPostMeta(postPage, postURL);
         const comments = await Group.getPostComments(postPage, postURL);
-        fs.writeFileSync(`${datasetDir(appName)}/${postId}.json`, JSON.stringify({
+        const post = {
           ...meta,
           comments,
           commentCount: comments.length
-        }));
+        }
+        ;
+        fs.writeFileSync(`${datasetDir(appName)}/${postId}.json`, JSON.stringify(post));
+
+        Firebase.syncOne(appName, post);
+
         donePosts.add(postId);
         fs.writeFileSync(`${datasetDir(appName)}/post-list.json`, Array.from(donePosts).join(','));
         totalComments += comments.length;

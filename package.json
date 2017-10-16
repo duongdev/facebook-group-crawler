@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_PATH=./src babel-node ./src/index.js",
+    "firebase": "cross-env NODE_PATH=./src babel-node ./src/firebase.js",
     "lint": "eslint_d .",
     "lint:fix": "eslint_d . --fix"
   },
@@ -17,6 +18,7 @@
     "debug": "^3.1.0",
     "eslint": "^4.9.0",
     "eslint_d": "^5.1.0",
+    "firebase": "^4.5.1",
     "moment": "^2.19.1",
     "puppeteer": "^0.12.0"
   },
