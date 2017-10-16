@@ -23,7 +23,7 @@ if (!fs.existsSync(datasetDir)) {
 
 const app = (async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: process.env.HEADLESS || false,
     // executablePath: '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
     devtools: false,
     timeout: 0
