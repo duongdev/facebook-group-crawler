@@ -56,12 +56,19 @@ const app = (async () => {
   _d('VNsbGroup loaded');
 
   let donePosts;
+  let totalComments;
   try {
     donePosts = fs.readFileSync(`${datasetDir}/post-list.json`).toString().split(',');
   } catch (e) {
     _d('donePosts empty');
     donePosts = [];
   }
+  try {
+    totalComments = fs.readFileSync(`${datasetDir}/total-comments.txt`).toString() * 1;
+  } catch (e) {
+    totalComments = 0;
+  }
+
   donePosts = new Set(donePosts);
 
   let postPage;
@@ -106,10 +113,13 @@ const app = (async () => {
         const comments = await Group.getPostComments(postPage, postURL);
         fs.writeFileSync(`${datasetDir}/${postId}.json`, JSON.stringify({
           ...meta,
-          comments
+          comments,
+          commentCount: comments.length
         }));
         donePosts.add(postId);
         fs.writeFileSync(`${datasetDir}/post-list.json`, Array.from(donePosts).join(','));
+        totalComments += comments.length;
+        fs.writeFileSync(`${datasetDir}/total-comments.txt`, totalComments);
       } catch (err) {
         console.error(err.toString());
       }
