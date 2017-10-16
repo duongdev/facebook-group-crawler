@@ -73,7 +73,7 @@ export const getPostMeta = async (page, postURL) => {
   const imageURL = await page.evaluate(() =>
     document.querySelector('.mtm a').dataset.ploi ||
     document.querySelector('.mtm img').src);
-  const reactions = await page.evaluate(() => document.querySelector('.tooltipText').innerText.match(/and\s(.*?)\s/)[1]);
+  const reactions = await page.evaluate(() => document.querySelector('.UFILikeSentence').innerText.replace(/\s.*/, '').replace(/\n/g, ''));
 
   const meta = {
     id: postId,
