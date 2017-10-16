@@ -3,3 +3,5 @@ dataset
 cookies.json
 
 src/auth\.js
+
+yarn\.lock
