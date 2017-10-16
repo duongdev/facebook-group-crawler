@@ -40,7 +40,9 @@ export const getPostComments = async (page, postURL) => {
     return Boolean(els.length);
   });
 
-  const comments = getComments(page);
+  const comments = await getComments(page);
+
+  _d('%d comments loaded', comments.length);
 
   if (!showMoreBtnExists || comments.length >= COMMENT_COUNT_LIMIT) {
     _d('Got %s comments for post %s', comments.length, postURL);
