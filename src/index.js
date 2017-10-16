@@ -74,6 +74,7 @@ const app = (async (appName, groupURL) => {
     totalComments is the total number of comment (by day) */
   let donePosts;
   let totalComments;
+  let ignoredPosts;
   try {
     donePosts = fs.readFileSync(`${datasetDir(appName)}/post-list.json`).toString().split(',');
   } catch (e) {
@@ -85,8 +86,14 @@ const app = (async (appName, groupURL) => {
   } catch (e) {
     totalComments = 0;
   }
+  try {
+    ignoredPosts = fs.readFileSync(`${datasetDir(appName)}/ignored.txt`).toString().split(',');
+  } catch (e) {
+    ignoredPosts = [];
+  }
 
   donePosts = new Set(donePosts);
+  ignoredPosts = new Set(ignoredPosts);
 
   let postPage;
 
@@ -106,7 +113,8 @@ const app = (async (appName, groupURL) => {
     postURLs = (await Group.getPosts(page))
       .filter((p, idx) => idx !== 0)
       .filter(p => p.indexOf('permalink') !== -1)
-      .filter(p => !donePosts.has(Group.getPostIdFromURL(p)));
+      .filter(p => !donePosts.has(Group.getPostIdFromURL(p)))
+      .filter(p => !ignoredPosts.has(Group.getPostIdFromURL(p)));
 
     if (!postURLs.length) {
       await Group.nextPage(page);
@@ -122,6 +130,9 @@ const app = (async (appName, groupURL) => {
         fs.mkdirSync(datasetDir(appName));
       }
 
+      const postURL = postURLs[i];
+      const postId = Group.getPostIdFromURL(postURL);
+
       try {
         postPage = await browser.newPage();
         await postPage.setViewport({
@@ -130,8 +141,6 @@ const app = (async (appName, groupURL) => {
           height: 800
         });
 
-        const postURL = postURLs[i];
-        const postId = Group.getPostIdFromURL(postURL);
         const meta = await Group.getPostMeta(postPage, postURL);
         const comments = await Group.getPostComments(postPage, postURL);
         const post = {
@@ -149,6 +158,8 @@ const app = (async (appName, groupURL) => {
         totalComments += comments.length;
         fs.writeFileSync(`${datasetDir(appName)}/total-comments.txt`, totalComments);
       } catch (err) {
+        ignoredPosts.add(postId);
+        fs.writeFileSync(`${datasetDir(appName)}/ignored.txt`, JSON.stringify(ignoredPosts));
         console.error(err.toString());
       }
       await postPage.close();
