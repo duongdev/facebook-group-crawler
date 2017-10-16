@@ -60,7 +60,6 @@ const app = (async () => {
     donePosts = fs.readFileSync(`${datasetDir}/post-list.json`).toString().split(',');
   } catch (e) {
     _d('donePosts empty');
-    console.log(e);
     donePosts = [];
   }
   donePosts = new Set(donePosts);
@@ -111,7 +110,7 @@ const app = (async () => {
         donePosts.add(postId);
         fs.writeFileSync(`${datasetDir}/post-list.json`, Array.from(donePosts).join(','));
       } catch (err) {
-        console.error(err);
+        console.error(err.toString());
       }
     }
   }
