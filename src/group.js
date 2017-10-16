@@ -73,6 +73,7 @@ export const getPostMeta = async (page, postURL) => {
   const imageURL = await page.evaluate(() =>
     document.querySelector('.mtm a').dataset.ploi ||
     document.querySelector('.mtm img').src);
+  const reactions = await page.evaluate(() => document.querySelector('.UFILikeSentence').innerText.replace(/\s.*/, ''));
 
   const meta = {
     id: postId,
@@ -88,13 +89,14 @@ export const getPostMeta = async (page, postURL) => {
     })),
     caption,
     timestamp,
-    imageURL
+    imageURL,
+    reactions
   };
 
   return meta;
 };
 
-export const getPostIdFromURL = URL => URL.match(/permalink\/(.*)/)[1].toString().replace(/\//g, '');
+export const getPostIdFromURL = URL => URL.match(/permalink\/(.*)/)[1].toString().replace(/\//g, '').replace(/\n/g, '');
 
 // Get comments loaded in current browser window
 export const getComments = async page => {
