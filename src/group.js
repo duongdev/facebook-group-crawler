@@ -82,7 +82,8 @@ export const getPostMeta = async (page, postURL) => {
 
       return {
         avatar: links[0].querySelector('img').src,
-        name: links[0].querySelector('img').attributes['aria-label'].value
+        name: links[0].querySelector('img').attributes['aria-label'].value,
+        link: links[0].href
       };
     })),
     caption,
