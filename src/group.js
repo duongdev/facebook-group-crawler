@@ -14,15 +14,15 @@ export const getPosts = async page => {
 export const nextPage = async page => {
   _d('Scroll 1st');
   await page.keyboard.press('End');
-  await page.waitFor(3000);
+  await page.waitFor(3e3);
 
   _d('Scroll 2nd');
   await page.keyboard.press('End');
-  await page.waitFor(3000);
+  await page.waitFor(3e3);
 
   _d('Scroll 3rd');
   await page.keyboard.press('End');
-  await page.waitFor(10000);
+  await page.waitFor(3e3);
 
   return true;
 };
@@ -55,7 +55,7 @@ export const getPostComments = async (page, postURL) => {
     if (els.length) return els[0].click();
   });
 
-  await page.waitFor(1000);
+  await page.waitFor(1e3);
   await page.waitFor(() => !document.querySelector('a.UFIPagerLink > span'), { timeout: 0 });
 
   return await getPostComments(page, postURL);
