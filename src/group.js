@@ -2,6 +2,8 @@ import Debug from 'debug';
 
 const _d = new Debug('app:group');
 
+const COMMENT_COUNT_LIMIT = process.env.limit || 500;
+
 export const getPosts = async page => {
   return await page.evaluate(() => {
     const posts = Array.from(document.querySelectorAll('.fbUserStory a ._5ptz'));
@@ -40,24 +42,9 @@ export const getPostComments = async (page, postURL) => {
     return Boolean(els.length);
   });
 
-  if (!showMoreBtnExists) {
-    _d('All comments are visible. Getting all comments');
-    const comments = await page.evaluate(() => {
-      const comments = Array.from(document.querySelectorAll('.UFICommentContentBlock'));
-      return comments.map(comment => {
-        const actor = comment.querySelector('.UFICommentActorName');
-        return ({
-          actor: {
-            name: actor.innerText,
-            link: actor.href
-          },
-          content: comment.querySelector('.UFICommentBody').innerText,
-          link: comment.querySelector('.uiLinkSubtle').href,
-          timestamp: comment.querySelector('abbr').dataset.utime
-        });
-      });
-    });
+  const comments = getComments(page);
 
+  if (!showMoreBtnExists || comments.length >= COMMENT_COUNT_LIMIT) {
     _d('Got %s comments for post %s', comments.length, postURL);
     return comments;
   }
@@ -105,6 +92,24 @@ export const getPostMeta = async (page, postURL) => {
 };
 
 export const getPostIdFromURL = URL => URL.match(/permalink\/(.*)/)[1].toString().replace(/\//g, '');
+
+export const getComments = async page => {
+  return await page.evaluate(() => {
+    const comments = Array.from(document.querySelectorAll('.UFICommentContentBlock'));
+    return comments.map(comment => {
+      const actor = comment.querySelector('.UFICommentActorName');
+      return ({
+        actor: {
+          name: actor.innerText,
+          link: actor.href
+        },
+        content: comment.querySelector('.UFICommentBody').innerText,
+        link: comment.querySelector('.uiLinkSubtle').href,
+        timestamp: comment.querySelector('abbr').dataset.utime
+      });
+    });
+  });
+};
 // const model = {
 //   link: '...',
 //   username: '',
