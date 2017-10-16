@@ -12,8 +12,6 @@ export const getPosts = async page => {
 };
 
 export const nextPage = async page => {
-  _d('Scroll to page bottom');
-
   _d('Scroll 1st');
   await page.keyboard.press('End');
   await page.waitFor(3000);

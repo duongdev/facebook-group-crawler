@@ -84,7 +84,7 @@ const app = (async () => {
       .filter(p => !donePosts.has(Group.getPostIdFromURL(p)));
 
     if (!postURLs.length) {
-      Group.nextPage(page);
+      await Group.nextPage(page);
     }
 
     for (let i in postURLs) {
