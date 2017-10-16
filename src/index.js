@@ -81,6 +81,7 @@ const app = (async () => {
 
     postURLs = (await Group.getPosts(page))
       .filter((p, idx) => idx !== 0)
+      .filter(p => p.indexOf('permalink') !== -1)
       .filter(p => !donePosts.has(Group.getPostIdFromURL(p)));
 
     if (!postURLs.length) {
