@@ -70,7 +70,9 @@ export const getPostMeta = async (page, postURL) => {
   const postId = getPostIdFromURL(postURL);
   const caption = await page.evaluate(() => document.querySelector('.userContent').innerText);
   const timestamp = await page.evaluate(() => document.querySelector('._5x46._1yz1 a abbr').dataset.utime);
-  const img = await page.evaluate(() => document.querySelector('.mtm img').src);
+  const imageURL = await page.evaluate(() =>
+    document.querySelector('.mtm a').dataset.ploi ||
+    document.querySelector('.mtm img').src);
 
   const meta = {
     id: postId,
@@ -85,7 +87,7 @@ export const getPostMeta = async (page, postURL) => {
     })),
     caption,
     timestamp,
-    img
+    imageURL
   };
 
   return meta;
