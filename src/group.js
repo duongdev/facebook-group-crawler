@@ -2,8 +2,11 @@ import Debug from 'debug';
 
 const _d = new Debug('app:group');
 
+// The maximum of the number of comments crawl per post
+// It may depend on your computer processor
 const COMMENT_COUNT_LIMIT = process.env.limit || 500;
 
+// Get all posts loaded on group view
 export const getPosts = async page => {
   return await page.evaluate(() => {
     const posts = Array.from(document.querySelectorAll('.fbUserStory a ._5ptz'));
@@ -11,29 +14,23 @@ export const getPosts = async page => {
   });
 };
 
+// Send "End" button to scroll to the bottom to let facebook loads more posts
 export const nextPage = async page => {
-  _d('Scroll 1st');
+  _d('Scroll down');
   await page.keyboard.press('End');
-  await page.waitFor(3e3);
-
-  _d('Scroll 2nd');
-  await page.keyboard.press('End');
-  await page.waitFor(3e3);
-
-  _d('Scroll 3rd');
-  await page.keyboard.press('End');
-  await page.waitFor(3e3);
-
-  return true;
+  return await page.waitFor(3e3);
 };
 
+// Expand all hidden comments (until reach COMMENT_COUNT_LIMIT)
+// return an array of comments
 export const getPostComments = async (page, postURL) => {
+  // Navigate to post if browser currently in another address
   if (await page.url() !== postURL) {
     _d('Get comments for post %s', postURL);
-    // _d('Navigate to %s', postURL);
     await page.goto(postURL, { timeout: 0 });
   }
 
+  // Find "Load more comments/replies" buttons
   const showMoreBtnExists = await page.evaluate(() => {
     const els = Array.from(document.querySelectorAll('a.UFIPagerLink, a.UFICommentLink'))
       .filter(el => el.innerText.indexOf('Hide') === -1);
@@ -44,11 +41,13 @@ export const getPostComments = async (page, postURL) => {
 
   _d('%d comments loaded', comments.length);
 
+  // Check if we should get more comments or return current comment list
   if (!showMoreBtnExists || comments.length >= COMMENT_COUNT_LIMIT) {
     _d('Got %s comments for post %s', comments.length, postURL);
     return comments;
   }
 
+  // Get more comments
   await page.evaluate(() => {
     const els = Array.from(document.querySelectorAll('a.UFIPagerLink, a.UFICommentLink'))
       .filter(el => el.innerText.indexOf('Hide') === -1);
@@ -61,6 +60,7 @@ export const getPostComments = async (page, postURL) => {
   return await getPostComments(page, postURL);
 };
 
+// Get post meta (poster, caption, image, posted time)
 export const getPostMeta = async (page, postURL) => {
   if (await page.url() !== postURL) {
     _d('Get meta for post %s', postURL);
@@ -93,6 +93,7 @@ export const getPostMeta = async (page, postURL) => {
 
 export const getPostIdFromURL = URL => URL.match(/permalink\/(.*)/)[1].toString().replace(/\//g, '');
 
+// Get comments loaded in current browser window
 export const getComments = async page => {
   return await page.evaluate(() => {
     const comments = Array.from(document.querySelectorAll('.UFICommentContentBlock'));
@@ -110,17 +111,3 @@ export const getComments = async page => {
     });
   });
 };
-// const model = {
-//   link: '...',
-//   username: '',
-//   title: '',
-//   comments: [
-//     {
-//       username: '',
-//       comment: '',
-//       timestamp: ''
-//     }
-//   ],
-//   lastCommentTimestamp: Number,
-//   timestamp: Number
-// };
