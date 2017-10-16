@@ -69,7 +69,7 @@ export const getPostMeta = async (page, postURL) => {
 
   const postId = getPostIdFromURL(postURL);
   const caption = await page.evaluate(() => document.querySelector('.userContent').innerText);
-  const timestamp = await page.evaluate(() => document.querySelector('._5x46._1yz1 a abbr').dataset.utime);
+  const utime = await page.evaluate(() => document.querySelector('._5x46._1yz1 a abbr').dataset.utime);
   const imageURL = await page.evaluate(() =>
     document.querySelector('.mtm a').dataset.ploi ||
     document.querySelector('.mtm img').src);
@@ -88,9 +88,10 @@ export const getPostMeta = async (page, postURL) => {
       };
     })),
     caption,
-    timestamp,
+    utime,
     imageURL,
-    reactions
+    reactions,
+    timestamp: Date.now()
   };
 
   return meta;
@@ -111,7 +112,8 @@ export const getComments = async page => {
         },
         content: comment.querySelector('.UFICommentBody').innerText,
         link: comment.querySelector('.uiLinkSubtle').href,
-        timestamp: comment.querySelector('abbr').dataset.utime
+        utime: comment.querySelector('abbr').dataset.utime,
+        timestamp: Date.now()
       });
     });
   });
