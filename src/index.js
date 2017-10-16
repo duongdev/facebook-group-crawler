@@ -11,6 +11,11 @@ const _d = new Debug('app:crawler');
 const today = moment().format('YYYY-MM-DD');
 const datasetDir = `dataset/${today}`;
 
+if (!fs.existsSync('dataset')) {
+  _d('Create dataset dir %s', 'dataset');
+  fs.mkdirSync('dataset');
+}
+
 if (!fs.existsSync(datasetDir)) {
   _d('Create dataset dir %s', datasetDir);
   fs.mkdirSync(datasetDir);
