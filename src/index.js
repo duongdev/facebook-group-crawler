@@ -63,8 +63,19 @@ const app = (async () => {
   let postPage;
 
   // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const postURLs = (await Group.getPosts(page))
+  while ((await Group.getPosts(page)).length <= 100) {
+    let postURLs = await Group.getPosts(page);
+    // Reload if the page is too long
+    if (postURLs.length > 100) {
+      _d('Page is too long with %d posts. Reloading...', postURLs.length);
+      await page.reload({
+        waitUntil: 'networkidle'
+      });
+      postURLs = await Group.getPosts(page);
+      _d('Page reloaded');
+    }
+
+    postURLs = (await Group.getPosts(page))
       .filter((p, idx) => idx !== 0)
       .filter(p => !donePosts.has(Group.getPostIdFromURL(p)));
 
