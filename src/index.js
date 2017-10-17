@@ -21,7 +21,7 @@ if (!fs.existsSync('dataset')) {
   fs.mkdirSync('dataset');
 }
 
-const app = (async (appName, groupURL, groupName) => {
+const app = (async (appName, groupURL) => {
   /* Ensure dataset exists for app */
   if (!fs.existsSync(`${DATA_PATH}/${appName}`)) {
     _d('Create dataset dir %s', `${DATA_PATH}/${appName}`);
@@ -147,7 +147,7 @@ const app = (async (appName, groupURL, groupName) => {
           ...meta,
           comments,
           commentCount: comments.length,
-          groupName
+          groupName: appName
         }
         ;
         fs.writeFileSync(`${datasetDir(appName)}/${postId}.json`, JSON.stringify(post));
@@ -169,9 +169,9 @@ const app = (async (appName, groupURL, groupName) => {
 });
 
 try {
-  app('VNsbGroup', 'https://www.facebook.com/groups/VNsbGroup', 'VNsbGroup');
-  app('VNsbGroup', 'https://www.facebook.com/groups/vietnamesesexybae/', 'vietnamesesexybae');
-  app('VNsbGroup', 'https://www.facebook.com/groups/CrushZonesThinh17', 'CrushZonesThinh17');
+  app('VNsbGroup', 'https://www.facebook.com/groups/VNsbGroup');
+  app('vietnamesesexybae', 'https://www.facebook.com/groups/vietnamesesexybae/');
+  app('CrushZonesThinh17', 'https://www.facebook.com/groups/CrushZonesThinh17');
 } catch (err) {
   console.error(err);
 }
