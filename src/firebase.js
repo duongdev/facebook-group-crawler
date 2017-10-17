@@ -29,6 +29,7 @@ export const app = async (appName) => {
 export const syncOne = async (appName, post) => {
   try {
     await database.ref(`${appName}/${post.id}`).set(post);
+    await database.ref(`all/${post.id}`).set(post);
     _d(`Synced ${post.id} to Firebase`);
   } catch (error) {
     _d(error);
