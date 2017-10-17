@@ -5,7 +5,7 @@ import moment from 'moment';
 import puppeteer from 'puppeteer';
 import * as Group from 'group';
 import * as Firebase from './firebase';
-import auth from 'auth';
+import config from 'config';
 
 /* Init debug instance */
 const _d = new Debug('app:crawler');
@@ -56,8 +56,8 @@ const app = (async (appName, groupURL, groupName) => {
       In this case, I havent check for token expire situation. PR welcome! */
     _d('Load cookies fail. Please login...');
     await page.goto('https://www.facebook.com', { waitUntil: 'networkidle' });
-    await page.type('#email', auth.email);
-    await page.type('#pass', auth.pass);
+    await page.type('#email', config.email);
+    await page.type('#pass', config.pass);
     await page.click('#loginbutton');
     await page.waitFor('#userNav', { timeout: 60e3 });
     fs.writeFileSync('cookies.json', JSON.stringify(await page.cookies()));

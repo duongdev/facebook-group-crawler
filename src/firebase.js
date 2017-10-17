@@ -3,18 +3,10 @@ import fs from 'fs';
 import path from 'path';
 import moment from 'moment';
 import Debug from 'debug';
+import config from 'config';
 
 const _d = new Debug('app:firebase');
-
-const  firebaseConfig = {
-  apiKey: "AIzaSyCQp_PfjcZ5hHfGCD0uWeN7uamuzMnhWig",
-  authDomain: "mac-pro-ebf51.firebaseapp.com",
-  databaseURL: "https://mac-pro-ebf51.firebaseio.com",
-  projectId: "mac-pro-ebf51",
-  storageBucket: "mac-pro-ebf51.appspot.com",
-  messagingSenderId: "443723329218"
-};
-const firebase = Firebase.initializeApp(firebaseConfig);
+const firebase = Firebase.initializeApp(config.firebase);
 const database = firebase.database();
 
 export const app = async (appName) => {
@@ -27,7 +19,7 @@ export const app = async (appName) => {
     const post = JSON.parse(fs.readFileSync(path.resolve(datasetDir, postFileName)));
     try {
       await database.ref(`${appName}/${post.id}`).set(post);
-      console.log(`Synced ${post.id}`);
+      _d(`Synced ${post.id}`);
     } catch (error) {
       console.error(error);
     }
