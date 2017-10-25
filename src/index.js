@@ -30,7 +30,7 @@ const app = (async (appName, groupURL) => {
 
   /* Init puppeteer browser and page */
   const browser = await puppeteer.launch({
-    headless: process.env.HEADLESS || false,
+    headless: process.env.HEADLESS === 'true',
     devtools: false,
     timeout: 0
   });
@@ -152,7 +152,7 @@ const app = (async (appName, groupURL) => {
         ;
         fs.writeFileSync(`${datasetDir(appName)}/${postId}.json`, JSON.stringify(post));
 
-        Firebase.syncOne(appName, post);
+        // Firebase.syncOne(appName, post);
 
         donePosts.add(postId);
         fs.writeFileSync(`${datasetDir(appName)}/post-list.json`, Array.from(donePosts).join(','));
@@ -169,9 +169,9 @@ const app = (async (appName, groupURL) => {
 });
 
 try {
-  app('VNsbGroup', 'https://www.facebook.com/groups/VNsbGroup');
-  app('vietnamesesexybae', 'https://www.facebook.com/groups/vietnamesesexybae/');
-  app('CrushZonesThinh17', 'https://www.facebook.com/groups/CrushZonesThinh17');
+  app('redditvietnam', 'https://www.facebook.com/groups/redditvietnam/');
+  // app('vietnamesesexybae', 'https://www.facebook.com/groups/vietnamesesexybae/');
+  // app('CrushZonesThinh17', 'https://www.facebook.com/groups/CrushZonesThinh17');
 } catch (err) {
   console.error(err);
 }

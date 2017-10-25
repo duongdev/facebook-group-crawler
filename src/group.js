@@ -4,7 +4,7 @@ const _d = new Debug('app:group');
 
 // The maximum of the number of comments crawl per post
 // It may depend on your computer processor
-const COMMENT_COUNT_LIMIT = process.env.limit || 500;
+const COMMENT_COUNT_LIMIT = process.env.LIMIT || process.env.limit || 500;
 
 // Get all posts loaded on group view
 export const getPosts = async page => {
